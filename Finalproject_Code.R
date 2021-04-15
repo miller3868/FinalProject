@@ -43,16 +43,13 @@ names(RH)[names(RH) == "RH..S.THB.20648665.20640418.2......Carrollton..Empire.Ch
 names(RH)[names(RH) == "RH..S.THB.20648665.20640418.2......EmpireChestnut"] <- "RH2"
 names(RH)[names(RH) == "RH..S.THB.20648665.20640418.2......ChestnutFarm"] <- "RH3"
 
-#Concatenate columns in a dataframe
-RH$RH <- paste(RH$RH1, RH$RH2, RH$RH3)
-
 class(RH) #Checks the type of data (character, factor, dataframe, etc)
 
 #Creates a duplicate data frame to manipulate without messing up the original
 RH_blank <- RH  #my data
-RH_blank = select(RH_blank, -RH) #Delete column to make new one after turning "NA" to blank
 
-RH_blank <- sapply(RH_blank, as.character) # Convert all columns to character (matrix)
+# Convert all columns to character (matrix)
+RH_blank <- sapply(RH_blank, as.character) 
 class(RH_blank)
 RH_blank[is.na(RH_blank)] <- "" # Replace NA with blank
 
