@@ -2,7 +2,7 @@
 getwd()
 
 #Import weather data, call it "Weather" so it's shorter than the file name
-Weather <- read.csv(file = 'MasterWeatherStation_EmpireChestnut.csv', header = TRUE)
+Weather <- read.csv(file = 'MasterWeatherStation_EmpireChestnut.csv', header = TRUE, stringsAsFactors=FALSE)
 head(Weather) #Look at the first 10 rows
 
 str(Weather) #Look at dataframe's internal structure, including format of each column
@@ -61,3 +61,43 @@ RH_df = select(RH_df, -RH1, -RH2, -RH3) #Delete original columns after combining
 rm(RH_blank) #Delete RH_blank because it's no longer needed
 
 ### End of Manipulating Relative Humidity columns
+
+
+### Extracting Data from Relative Humidty Dataframe
+
+#Convert second column (RH) to numeric, while leaving first column (Date) as character
+RH_df$RH <- as.numeric(as.character(RH_df$RH))
+
+mean(RH_df$RH) #Mean RH for full date range
+
+#Mutate the date so that the times are removed and each row is assigned a date
+RH_df <- RH_df %>%
+  mutate(Date = as.Date(Date, format = "%m/%d/%y"))
+
+
+
+####Playground Below
+## Make a new dataframe for each day, sort by Date
+May19 <- RH_df[RH_df$Date >= "05/19/20" & RH_df$Date <= "05/20/20",]
+May20 <- RH_df[RH_df$Date >= "05/20/20" & RH_df$Date <= "05/21/20",]
+
+library(dplyr)
+May19 %>% group_by(Date) %>% summarise_each(funs(sum))
+
+RH_df$Date <- as.Date(RH_df$Date,format = "%m/%d/%y %t")
+
+
+mean(May19$RH)
+max(May19$RH)
+min(May19$RH)
+range(May19$RH)
+summary(RH_df)
+
+colMax <- function(data) sapply(data, max, na.rm = TRUE)
+
+head(RH_num)
+class(RH_df)
+mean(RH_num$RH)
+
+
+summary(May19)
