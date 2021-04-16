@@ -8,7 +8,7 @@ Colletotrichum species have become economically devastating pathogens of chestnu
 ##Project Description  
 The goal of this project is to sort and organize the weather data into formats that can be used for downstream data analysis. The raw files are too large to be manipulated with a GUI spreadsheet program such as Excel. 
 
-###Weather Data To Do:  
+###Weather Data To Do: Part A  
 * Because the weather station was renamed three times, columns are redundant and need to be combined so that each weather parameter is one column instead of 3
 + Export each parameter into its own file, and then combine columns? 
 + Combine the files so that each parameter appears as a single column in 1 file?
@@ -17,7 +17,7 @@ The goal of this project is to sort and organize the weather data into formats t
 + Start with Air Temperature, test the code
 + Make a minor adjustment (rename a variable) so that it works with Rainfall
 
-###Flow of code for each weather parameter:  
+###Flow of code for each weather parameter: Part B
 * Pull out rows corresponding to date range of interest (i.e. one month)
 * Pull out rows corresponding to each day
 * Determine an average value for the rows corresponding to each day
