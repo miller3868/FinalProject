@@ -1,5 +1,10 @@
 # FinalProject
-##Update 15 April 2020
+## Update 16 April 2021
+* Created an updated script (with Jelmer's help) to merge the weather parameters columns using the coalesce() function
+* Organized Final Project directory: Made directory for Data, Scripts, and Sandbox. Sandbox contains code notes and sample code for me to play with. Once code is finalized, it is copied into Scripts. 
+
+
+## Update 15 April 2021
 
 ## Workflow: Part A
 

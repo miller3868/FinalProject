@@ -14,6 +14,43 @@ columns
 #Create a new dataframe which is a subset of the old one, minus the column called Line.
 df = subset(Weather, select = -c(Line.))  
 
+
+
+weatherpars <- c("^RH", "^Temp.*Air$", "^Temp.*Soil$")
+parnames <- c("RH", "AirTemp", "SoilTemp")
+
+getpar <- function(weatherpar, Weather) {
+  parcolumns <- Weather %>% 
+    select(matches(weatherpar))
+  colnames(parcolumns) <- c("a", "b", "c")
+  par_all <- coalesce(parcolumns$a, parcolumns$b, parcolumns$c)
+  return(par_all)
+}
+
+output <- do.call(cbind, lapply(weatherpars, getpar, Weather))
+colnames(output) <- parnames
+output <- cbind(Date = Weather$Date, output)
+
+
+#Don't need this, it was an earlier iteration of the idea
+makepar_df <- function(i, weatherpars, parnames, Weather) {
+  weatherpar <- weatherpars[i]
+  parname <- parnames[i]
+  par_df <- cbind(Date = Weather$Date, getpar(weatherpar, Weather))
+  colnames(par_df)[2] <- parname
+  return(par_df)
+}
+output <- makepar_df(1, weatherpars, parnames, Weather)
+
+
+
+
+
+head(parcolumns)
+
+
+
+
 #Create a new dataframe which is a subset of the old one, keeping only the columns selected
 RH = subset(Weather, select = c(Date, RH..S.THB.20648665.20640418.2......Carrollton..Empire.Chestnut.,
                                 RH..S.THB.20648665.20640418.2......EmpireChestnut,
@@ -48,6 +85,9 @@ class(RH) #Checks the type of data (character, factor, dataframe, etc)
 #Creates a duplicate data frame to manipulate without messing up the original
 RH_blank <- RH  #my data
 
+RH_all <- coalesce(RH$RH1, RH$RH2, RH$RH3)
+
+
 # Convert all columns to character (matrix)
 RH_blank <- sapply(RH_blank, as.character) 
 class(RH_blank)
@@ -76,6 +116,8 @@ RH_df <- RH_df %>%
 
 
 
+
+
 ####Playground Below
 ## Make a new dataframe for each day, sort by Date
 May19 <- RH_df[RH_df$Date >= "05/19/20" & RH_df$Date <= "05/20/20",]
@@ -84,7 +126,7 @@ May20 <- RH_df[RH_df$Date >= "05/20/20" & RH_df$Date <= "05/21/20",]
 library(dplyr)
 May19 %>% group_by(Date) %>% summarise_each(funs(sum))
 
-RH_df$Date <- as.Date(RH_df$Date,format = "%m/%d/%y %t")
+RH_df$Date <- as.Date(RH_df$Date,format = "%m/%d/%y")
 
 
 mean(May19$RH)
