@@ -1,3 +1,5 @@
+#!/usr/bin/bash Rscript
+
 ## Aggregate rows by date and generate summary statistics (mean, max, sum, etc) per day.
 ## Write aggregated data to new dataframe. Repeat for each statistic of interest.
 ## Write each dataframe to a CSV file in MergeCSV folder to be merged into single dataframe. 

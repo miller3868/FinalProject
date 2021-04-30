@@ -1,3 +1,5 @@
+#!/usr/bin/bash Rscript
+
 ## Merge dataframes in MergeCSV directory into a single CSV file.
 ## Export CSV file to Results directory.
 

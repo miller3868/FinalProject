@@ -15,7 +15,7 @@ Scripts can be run in R or from the Command Line
 I will not do this as a SLURM job through OSC because it's unnecessary given the small size of the data file (as previoulsy discussed)
 
 ## Workflow 
-### This explains the workflow found in the Snakefile
+### Set working directory and load tidyverse package
 
 * setwd("/Users/ACM/FinalProject/Data")
 * library(tidyverse) #load dplyr
@@ -26,6 +26,7 @@ I will not do this as a SLURM job through OSC because it's unnecessary given the
 
 * Weather2 <- subset(Weather, select = -c(Line.)) #Make duplicate of original data for manipulation, get rid of "Line" column
 
+## Snakefile code starts here
 ### Run CombineColumns script: 
 * This merges the duplicated columns into a singe column per weather parameter and makes a new Date column with can be used to aggregate rows by date
 * Input is Weather2 dataframe

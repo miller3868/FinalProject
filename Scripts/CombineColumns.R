@@ -1,3 +1,4 @@
+#!/usr/bin/bash Rscript
 
 #weatherpars = Make a vector of weather parameters from weather file, matching beginning and end of column names
 #parnames = designate names for parameter columns after combining them
@@ -24,6 +25,9 @@ colnames(output) <- parnames  #Assign parnames to columns
 #Make new column called DATE that changes the date into R-recognized Date format and removes timestamp
 CombColumns <- cbind(Date = (Weather2$DATE <- as.Date(Weather2$DATE, format = "%m/%d/%y")), 
                          FullDate = Weather2$Date, output)
+
+write.csv(CombColumns,
+          file = "/Users/ACM/FinalProject/Data/CombColumns.csv", row.names=F)
 
 
 

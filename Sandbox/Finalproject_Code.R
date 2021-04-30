@@ -76,6 +76,7 @@ library(tidyverse) #load tidyverse which includes dplyr & ggplot
 install.packages("plyr")
 library(lubridate)
 library(plyr)
+library(stringr)
 
 #### Manipulating Relative Humidity columns
 #Rename columns, list name being replaced first, then replacement name
