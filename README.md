@@ -1,45 +1,44 @@
-# FinalProject
-## Update 16 April 2021
-* Created an updated script (with Jelmer's help) to merge the weather parameters columns using the coalesce() function
-* Organized Final Project directory: Made directory for Data, Scripts, and Sandbox. Sandbox contains code notes and sample code for me to play with. Once code is finalized, it is copied into Scripts. 
+# Final Project: Summary and Workflow
+### Amy Miller, PLNTPTH 8300 Practical Computing Skills for Biologists, SP21
 
+This project is housed locally on my computer and pushed to GitHub. The parent directory is called Final Project. In it there is a ProjectProposal that outlines the project background and goals. Here is a guide to the important files and folders:
+* The Data directory contains the raw data file and MergeCSV folder with working data
+* The Scripts directory contains the scripts to execute the data analysis
+* The Results directory has the final output file of organized and summarized weather data that can be used for downstream data analysis beyond the scope of this project
+* The Snakefile contains the information for running the scripts, including the order of operations
+* The Sandbox directory contains practice scripts, notes, and other useful things I've discovered along the way that I might want to refer back to in the future. Scripts in Sandbox are not very well organized and are not meant to be graded.  
 
-## Update 15 April 2021
+## Technical Details:  
+Coding language = R (RStudio Server available through OSC)  
+Version Control via Git integrated into RStudio  
+Scripts can be run in R or from the Command Line
+I will not do this as a SLURM job through OSC because it's unnecessary given the small size of the data file (as previoulsy discussed)
 
-## Workflow: Part A
+## Workflow 
+### This explains the workflow found in the Snakefile
 
-* Import weather data, call it "Weather" so it's shorter than the file name
-+ To Do: There are 11 variables, with 3 columns for each variable. Need to combine 3 columns into 1 for each variable
-* Create a new dataframe which is a subset of the old one, keeping only the columns selected
-+ Example: RH = subset(Weather, select = c(Date, RH..S.THB.20648665.20640418.2......Carrollton..Empire.Chestnut.,
-                                RH..S.THB.20648665.20640418.2......EmpireChestnut,
-                                RH..S.THB.20648665.20640418.2......ChestnutFarm))
-+ Dataframe of Date and Relative Humidity
-* Install dplyr for data manipulation
-* Rename columns, list name being replaced first, then replacement name
-+ Example: names(RH)[names(RH) == "RH..S.THB.20648665.20640418.2......Carrollton..Empire.Chestnut."] <- "RH1"
-* Create a duplicate data frame to manipulate without messing up the original
-* Convert all columns to character (matrix)
-* Replace NA with blank
-* Convert back to dataframe to combine columns
-* Concatenate the specified columns in the dataframe into a new column
-* Delete original columns after combining them
-* Delete RH_blank (intermediate step) because it's no longer needed
-* See Finalproject_Code.R for annotated script for this example
+* setwd("/Users/ACM/FinalProject/Data")
+* library(tidyverse) #load dplyr
 
-### To Do: Make a script to run for each parameter. Need to match each set of 3 columns by first and last word of each column name. 
-* How to do this?? I've found ways to subset data based on specific variables/names, and based on column/row placement, but not based on matching values in each column header, regardless of what those value are. 
+### Import weather data, call it "Weather" so it's shorter than the file name
+* Weather <- read.csv(file = 'MasterWeatherStation_EmpireChestnut.csv', header = TRUE, stringsAsFactors=FALSE)
+* head(Weather) #Look at the first 10 rows
 
+* Weather2 <- subset(Weather, select = -c(Line.)) #Make duplicate of original data for manipulation, get rid of "Line" column
 
-## Workflow: Part B
-* Extract and manipulate data from each column of the weather parameters for further statistical analysis
-* Convert second column (e.g. RH) to numeric, while leaving first column (Date) as character
-* Mutate the date so that the time stampes are removed and each row is grouped by date
+### Run CombineColumns script: 
+* This merges the duplicated columns into a singe column per weather parameter and makes a new Date column with can be used to aggregate rows by date
+* Input is Weather2 dataframe
+* Output is dataframe called CombColumns
 
-### To Do: Same issue as above, but with rows. How to subset the data by simply matching rows instead of identifying each row value to match? 
+### Run AggRows script: 
+* This aggregates rows by date, meaning all rows with the same date are recognized and summary statistics are generated for those blocks of data. Each parameter and statistic are exported as a separate dataframe. 
+* Input is CombColumns dataframe
+* Output is directory called MergeCSV (in Data directory) with separte CSV files of summary statistics
 
-## Ideas:
-* Use Snakemake to concatenate columns in Part A? 
-* Use pipes to group rows by date and generate summary statistics for each group, such as mean, max, and min
-
-
+### Run MergeData script:
+* This merges the separate dataframes into a single dataframe with is then exported as a CSV to the results directory and can be used in the future for regression analysis against chestnut disease data
+* Input is MergeCSV directory
+* Output is WeatherSummary.csv file in "Results" directory
+  
+  

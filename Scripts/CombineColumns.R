@@ -1,22 +1,29 @@
 
+#weatherpars = Make a vector of weather parameters from weather file, matching beginning and end of column names
+#parnames = designate names for parameter columns after combining them
+weatherpars <- c("^RH", "^Temp.*Air$", "^Temp.*Soil$", "^Rain", "^Dew",
+                 "^Gust", "^Wetness", "^Water", "^Wind.Speed", "^Wind.Direction")
+parnames <- c("RH", "AirTemp", "SoilTemp", "Rainfall", "DewPoint", 
+              "GustSpeed", "LeafWetness", "SoilMoisture", "WindSpeed", "WindDirection")
 
-#Import weather data, call it "Weather" so it's shorter than the file name
-Weather <- read.csv(file = 'MasterWeatherStation_EmpireChestnut.csv', header = TRUE, stringsAsFactors=FALSE)
-head(Weather) #Look at the first 10 rows
-
-
-#Make a vector of weather parameters from weather file (weatherpars), 
-weatherpars <- c("^RH", "^Temp.*Air$", "^Temp.*Soil$")
-parnames <- c("RH", "AirTemp", "SoilTemp")
-
-getpar <- function(weatherpar, Weather) {
-  parcolumns <- Weather %>% 
+#Make function getpar to pull columns from Weather data, match by weatherpar, coalsce 3 matches into 1 column
+getpar <- function(weatherpar, Weather2) {
+  parcolumns <- Weather2 %>% 
     select(matches(weatherpar))
   colnames(parcolumns) <- c("a", "b", "c")
   par_all <- coalesce(parcolumns$a, parcolumns$b, parcolumns$c)
   return(par_all)
 }
 
-output <- do.call(cbind, lapply(weatherpars, getpar, Weather))
-colnames(output) <- parnames
-output <- cbind(Date = Weather$Date, output)
+#Make dataframe that combines output of getpar for each weather parameter
+output <- do.call(cbind, lapply(weatherpars, getpar, Weather2))
+output <- as.data.frame(output)  #Change output to dataframe for downstream manipulation
+colnames(output) <- parnames  #Assign parnames to columns
+
+#Use cbind() to combine the original date column (renanmed FullDate) from Weather with output dataframe
+#Make new column called DATE that changes the date into R-recognized Date format and removes timestamp
+CombColumns <- cbind(Date = (Weather2$DATE <- as.Date(Weather2$DATE, format = "%m/%d/%y")), 
+                         FullDate = Weather2$Date, output)
+
+
+
